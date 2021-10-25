@@ -11,13 +11,10 @@
     "zod",
     "schema"
   ],
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "bin": {
-    "pgzod": "./dist/index.js"
+    "pgzod": "./index.js"
   },
   "scripts": {
     "cli": "ts-node src/index.ts",
