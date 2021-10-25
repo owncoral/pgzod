@@ -75,7 +75,7 @@
 					<p align="center">
 						Transform PostgreSQL schemas into Zod validators and types
 						<br />
-						<a href="https://github.com/guzmonne/pgzod"><strong>Explore the docs »</strong></a>
+						<a href="https://guzmonne.github.io/pgzod"><strong>Explore the docs »</strong></a>
 						<br />
 						<br />
 						<!-- <a href="https://github.com/guzmonne/pgzod">View Demo</a> -->
@@ -85,36 +85,25 @@
 						<a href="https://github.com/guzmonne/pgzod/issues">Request Feature</a>
 					</p>
 				</div>
+				<h2>Table of Contents</h2>
 				<!-- TABLE OF CONTENTS -->
-				<details>
-					<summary>Table of Contents</summary>
-					<ol>
-						<li>
-							<a href="#about-the-project">About The Project</a>
-							<ul>
-								<li><a href="#built-with">Built With</a></li>
-							</ul>
-						</li>
-						<li>
-							<a href="#getting-started">Getting Started</a>
-							<ul>
-								<li><a href="#prerequisites">Prerequisites</a></li>
-								<li><a href="#installation">Installation</a></li>
-							</ul>
-						</li>
-						<li><a href="#usage">Usage</a></li>
-						<li><a href="#roadmap">Roadmap</a></li>
-						<li><a href="#contributing">Contributing</a></li>
-						<li><a href="#license">License</a></li>
-						<li><a href="#contact">Contact</a></li>
-						<li><a href="#acknowledgments">Acknowledgments</a></li>
-					</ol>
-				</details>
+				<ul>
+					<li><a href="#1-about-the-project">1. About The Project</a><ul>
+							<li><a href="#11-built-with">1.1. Built With</a></li>
+						</ul>
+					</li>
+					<li><a href="#2-getting-started">2. Getting Started</a></li>
+					<li><a href="#3-usage">3. Usage</a></li>
+					<li><a href="#4-roadmap">4. Roadmap</a></li>
+					<li><a href="#5-contributing">5. Contributing</a></li>
+					<li><a href="#6-license">6. License</a></li>
+					<li><a href="#7-contact">7. Contact</a></li>
+				</ul>
 				<!-- ABOUT THE PROJECT -->
-				<a href="#about-the-project" id="about-the-project" style="color: inherit; text-decoration: none;">
-					<h2>About The Project</h2>
+				<a href="#1-about-the-project" id="1-about-the-project" style="color: inherit; text-decoration: none;">
+					<h2>1. About The Project</h2>
 				</a>
-				<p>Keeping Typescript types in sync with your PostgreSQL database schemas very useful but hard.
+				<p>Keeping Typescript types in sync with your PostgreSQL database schemas is very useful but challenging.
 					With <code>pgzod</code> that you can maintain all your tables in sync with Typescript through
 				<a href="https://www.npmjs.com/package/zod">&quot;Zod&quot;</a>. Zod is, in their own words:</p>
 				<blockquote>
@@ -122,8 +111,8 @@
 				</blockquote>
 				<p>It works great when you couple it with a PostgreSQL client like <a href="https://www.npmjs.com/package/slonik">slonik</a>.</p>
 				<p align="right">(<a href="#top">back to top</a>)</p>
-				<a href="#built-with" id="built-with" style="color: inherit; text-decoration: none;">
-					<h3>Built With</h3>
+				<a href="#11-built-with" id="11-built-with" style="color: inherit; text-decoration: none;">
+					<h3>1.1. Built With</h3>
 				</a>
 				<ul>
 					<li><a href="https://www.npmjs.com/package/slonik">Slonik</a></li>
@@ -133,8 +122,8 @@
 				</ul>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- GETTING STARTED -->
-				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
-					<h2>Getting Started</h2>
+				<a href="#2-getting-started" id="2-getting-started" style="color: inherit; text-decoration: none;">
+					<h2>2. Getting Started</h2>
 				</a>
 				<p>The best way to run <code>pgzod</code> is by installing it globally or using it through <code>npx</code>.</p>
 				<ul>
@@ -151,8 +140,8 @@
 </code></pre>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- USAGE EXAMPLES -->
-				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
-					<h2>Usage</h2>
+				<a href="#3-usage" id="3-usage" style="color: inherit; text-decoration: none;">
+					<h2>3. Usage</h2>
 				</a>
 				<p>You can use <code>pgzod</code> from the command line. It needs the credentials and the address of the live
 					database from where to read the schema. You can provide this information through command options or
@@ -173,8 +162,8 @@
 				<p><em>For more examples, please refer to the <a href="https://github.com/guzmonne/pgzod">Documentation</a></em></p>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- ROADMAP -->
-				<a href="#roadmap" id="roadmap" style="color: inherit; text-decoration: none;">
-					<h2>Roadmap</h2>
+				<a href="#4-roadmap" id="4-roadmap" style="color: inherit; text-decoration: none;">
+					<h2>4. Roadmap</h2>
 				</a>
 				<ul>
 					<li>Find a better solution to deal with dates. Currently we treat them as strings.</li>
@@ -185,8 +174,8 @@
 				<p>See the <a href="https://github.com/guzmonne/pgzod/issues">open issues</a> for a complete list of proposed features (and known issues).</p>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- CONTRIBUTING -->
-				<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
-					<h2>Contributing</h2>
+				<a href="#5-contributing" id="5-contributing" style="color: inherit; text-decoration: none;">
+					<h2>5. Contributing</h2>
 				</a>
 				<p>Your contributions makes the open source community a fantastic place to learn, inspire, and create.</p>
 				<p>If you have a suggestion to improve this project, please fork the repo and create a pull request.
@@ -201,14 +190,14 @@
 				</ol>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- LICENSE -->
-				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
-					<h2>License</h2>
+				<a href="#6-license" id="6-license" style="color: inherit; text-decoration: none;">
+					<h2>6. License</h2>
 				</a>
 				<p>Distributed under the MIT License. See <code>LICENSE.txt</code> for more information.</p>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- CONTACT -->
-				<a href="#contact" id="contact" style="color: inherit; text-decoration: none;">
-					<h2>Contact</h2>
+				<a href="#7-contact" id="7-contact" style="color: inherit; text-decoration: none;">
+					<h2>7. Contact</h2>
 				</a>
 				<p>Your Name - <a href="https://twitter.com/guzmonne">@guzmonne</a> - <a href="mailto:guzmonne@hotmail.com">guzmonne@hotmail.com</a></p>
 				<p>Project Link: <a href="https://github.com/guzmonne/pgzod">https://github.com/guzmonne/pgzod</a></p>
