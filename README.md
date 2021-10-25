@@ -21,7 +21,7 @@
   <p align="center">
     Transform PostgreSQL schemas into Zod validators and types
     <br />
-    <a href="https://github.com/guzmonne/pgzod"><strong>Explore the docs »</strong></a>
+    <a href="https://guzmonne.github.io/pgzod"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <!-- <a href="https://github.com/guzmonne/pgzod">View Demo</a> -->
@@ -33,39 +33,22 @@
 </div>
 
 
+<h2>Table of Contents</h2>
 
 <!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-
+- [1. About The Project](#1-about-the-project)
+  - [1.1. Built With](#11-built-with)
+- [2. Getting Started](#2-getting-started)
+- [3. Usage](#3-usage)
+- [4. Roadmap](#4-roadmap)
+- [5. Contributing](#5-contributing)
+- [6. License](#6-license)
+- [7. Contact](#7-contact)
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+## 1. About The Project
 
-Keeping Typescript types in sync with your PostgreSQL database schemas very useful but hard.
+Keeping Typescript types in sync with your PostgreSQL database schemas is very useful but challenging.
 With `pgzod` that you can maintain all your tables in sync with Typescript through
 ["Zod"][zod]. Zod is, in their own words:
 
@@ -75,7 +58,7 @@ It works great when you couple it with a PostgreSQL client like [slonik][slonik]
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Built With
+### 1.1. Built With
 
 * [Slonik][slonik]
 * [Typescript][typescript]
@@ -85,7 +68,7 @@ It works great when you couple it with a PostgreSQL client like [slonik][slonik]
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
-## Getting Started
+## 2. Getting Started
 
 The best way to run `pgzod` is by installing it globally or using it through `npx`.
 
@@ -108,7 +91,7 @@ npx pgzod --help
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## 3. Usage
 
 You can use `pgzod` from the command line. It needs the credentials and the address of the live
 database from where to read the schema. You can provide this information through command options or
@@ -139,7 +122,7 @@ _For more examples, please refer to the [Documentation][docs]_
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- ROADMAP -->
-## Roadmap
+## 4. Roadmap
 
 - Find a better solution to deal with dates. Currently we treat them as strings.
 - Add support for more types.
@@ -151,7 +134,7 @@ See the [open issues](https://github.com/guzmonne/pgzod/issues) for a complete l
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
-## Contributing
+## 5. Contributing
 
 Your contributions makes the open source community a fantastic place to learn, inspire, and create.
 
@@ -169,14 +152,14 @@ Don't forget to give the project a star! Thanks again!
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- LICENSE -->
-## License
+## 6. License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTACT -->
-## Contact
+## 7. Contact
 
 Your Name - [@guzmonne](https://twitter.com/guzmonne) - guzmonne@hotmail.com
 
