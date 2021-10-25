@@ -65,12 +65,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Keeping Typescript types in sync with database schemas is hard. Especially at the beginning of a
-project where we constantly update it. This project aims to simplify this problem. With `pgzod`, you
-can maintain all your tables in sync with Typescript by using
-["Zod"][zod]. Zod is, in its own words, a TypeScript-first schema
-declaration and validation library. You can use a Zod schema for validation or as a normal type. It
-works great when you couple it with a PostgreSQL client like `[slonik`][slonik].
+Keeping Typescript types in sync with your PostgreSQL database schemas very useful but hard.
+With `pgzod` that you can maintain all your tables in sync with Typescript through
+["Zod"][zod]. Zod is, in their own words:
+
+> a TypeScript-first schema declaration and validation library. You can use a Zod schema for validation or as a normal type.
+
+It works great when you couple it with a PostgreSQL client like `[slonik][slonik]`.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
