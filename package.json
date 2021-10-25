@@ -17,7 +17,8 @@
     "pgzod": "./dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "dist/lib"
   ],
   "scripts": {
     "cli": "ts-node src/index.ts",

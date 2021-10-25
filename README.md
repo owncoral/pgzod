@@ -124,7 +124,7 @@ _For more examples, please refer to the [Documentation][docs]_
 <!-- ROADMAP -->
 ## 4. Roadmap
 
-- Find a better solution to deal with dates. Currently we treat them as strings.
+- Find a better solution to deal with dates, and currently, we treat them as strings.
 - Add support for more types.
 - Allow the user to override the current type mappings.
 - Add tests.
@@ -136,9 +136,10 @@ See the [open issues](https://github.com/guzmonne/pgzod/issues) for a complete l
 <!-- CONTRIBUTING -->
 ## 5. Contributing
 
-Your contributions makes the open source community a fantastic place to learn, inspire, and create.
+Your contributions make the open-source community a fantastic place to learn, inspire, and create.
 
-If you have a suggestion to improve this project, please fork the repo and create a pull request.
+To suggest how to improve this project, please fork the repo and create a pull request.
+
 You can also create an issue with the tag "enhancement."
 
 Don't forget to give the project a star! Thanks again!
