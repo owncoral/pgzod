@@ -1,0 +1,262 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>pgzod</title>
+	<meta name="description" content="Documentation for pgzod">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">pgzod</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>pgzod</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<div id="top"></div>
+				<p><a href="https://github.com/guzmonne/pgzod/graphs/contributors"><img src="https://img.shields.io/github/contributors/guzmonne/pgzod.svg?style=for-the-badge" alt="Contributors"></a>
+					<a href="https://github.com/guzmonne/pgzod/network/members"><img src="https://img.shields.io/github/forks/guzmonne/pgzod.svg?style=for-the-badge" alt="Forks"></a>
+					<a href="https://github.com/guzmonne/pgzod/stargazers"><img src="https://img.shields.io/github/stars/guzmonne/pgzod.svg?style=for-the-badge" alt="Stargazers"></a>
+					<a href="https://github.com/guzmonne/pgzod/issues"><img src="https://img.shields.io/github/issues/guzmonne/pgzod.svg?style=for-the-badge" alt="Issues"></a>
+					<a href="https://github.com/guzmonne/pgzod/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/guzmonne/pgzod.svg?style=for-the-badge" alt="MIT License"></a>
+				<a href="https://linkedin.com/in/ing-gmonne"><img src="https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555" alt="LinkedIn"></a></p>
+				<!-- PROJECT LOGO -->
+				<br />
+				<div align="center">
+					<!-- <a href="https://github.com/guzmonne/pgzod"> -->
+					<!--   <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
+					<!-- </a> -->
+					<h3 align="center"><code>pgzod</code></h3>
+					<p align="center">
+						Transform PostgreSQL schemas into Zod validators and types
+						<br />
+						<a href="https://github.com/guzmonne/pgzod"><strong>Explore the docs »</strong></a>
+						<br />
+						<br />
+						<!-- <a href="https://github.com/guzmonne/pgzod">View Demo</a> -->
+						<!-- · -->
+						<a href="https://github.com/guzmonne/pgzod/issues">Report Bug</a>
+						·
+						<a href="https://github.com/guzmonne/pgzod/issues">Request Feature</a>
+					</p>
+				</div>
+				<!-- TABLE OF CONTENTS -->
+				<details>
+					<summary>Table of Contents</summary>
+					<ol>
+						<li>
+							<a href="#about-the-project">About The Project</a>
+							<ul>
+								<li><a href="#built-with">Built With</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="#getting-started">Getting Started</a>
+							<ul>
+								<li><a href="#prerequisites">Prerequisites</a></li>
+								<li><a href="#installation">Installation</a></li>
+							</ul>
+						</li>
+						<li><a href="#usage">Usage</a></li>
+						<li><a href="#roadmap">Roadmap</a></li>
+						<li><a href="#contributing">Contributing</a></li>
+						<li><a href="#license">License</a></li>
+						<li><a href="#contact">Contact</a></li>
+						<li><a href="#acknowledgments">Acknowledgments</a></li>
+					</ol>
+				</details>
+				<!-- ABOUT THE PROJECT -->
+				<a href="#about-the-project" id="about-the-project" style="color: inherit; text-decoration: none;">
+					<h2>About The Project</h2>
+				</a>
+				<p>Keeping Typescript types in sync with database schemas is hard. Especially at the beginning of a
+					project where we constantly update it. This project aims to simplify this problem. With <code>pgzod</code>, you
+					can maintain all your tables in sync with Typescript by using
+					<a href="https://www.npmjs.com/package/zod">&quot;Zod&quot;</a>. Zod is, in its own words, a TypeScript-first schema
+					declaration and validation library. You can use a Zod schema for validation or as a normal type. It
+				works great when you couple it with a PostgreSQL client like <code>[slonik</code>]<a href="https://www.npmjs.com/package/slonik">slonik</a>.</p>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<a href="#built-with" id="built-with" style="color: inherit; text-decoration: none;">
+					<h3>Built With</h3>
+				</a>
+				<ul>
+					<li><a href="https://www.npmjs.com/package/slonik">Slonik</a></li>
+					<li><a href="https://typescript.com">Typescript</a></li>
+					<li><a href="https://www.npmjs.com/package/yargs">Yargs</a></li>
+					<li><a href="https://www.npmjs.com/package/zod">Zod</a></li>
+				</ul>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- GETTING STARTED -->
+				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+					<h2>Getting Started</h2>
+				</a>
+				<p>The best way to run <code>pgzod</code> is by installing it globally or using it through <code>npx</code>.</p>
+				<ul>
+					<li>npm<pre><code class="language-sh"><span style="color: #000000">npm install pgzod -g</span>
+</code></pre>
+					</li>
+					<li>yarn<pre><code class="language-sh"><span style="color: #000000">yarn global add pgzod</span>
+</code></pre>
+					</li>
+				</ul>
+				<p>If you want to use <code>npx</code>, you don&#39;t have to install <code>pgzod</code> run:</p>
+				<pre><code class="language-sh"><span style="color: #008000"># Shows the command help.</span>
+<span style="color: #000000">npx pgzod --help</span>
+</code></pre>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- USAGE EXAMPLES -->
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>You can use <code>pgzod</code> from the command line. It needs the credentials and the address of the live
+					database from where to read the schema. You can provide this information through command options or
+				environment variables. All the <a href="https://www.postgresql.org/docs/current/libpq-envars.html">variables from PostgreSQL</a> are supported.</p>
+				<p>Your database credentials could be stored on a local <code>.env</code> file, or even better, on a secret
+				manager. You then load the credentials to your current session and run the <code>pgzod</code> command.</p>
+				<p>For example, you could build the following <code>.env</code> file:</p>
+				<pre><code class="language-ini"><span style="color: #0000FF">PGHOST</span><span style="color: #000000">=some.postgresql.host</span>
+<span style="color: #0000FF">PGPORT</span><span style="color: #000000">=12345</span>
+<span style="color: #0000FF">PGDATABASE</span><span style="color: #000000">=app</span>
+<span style="color: #0000FF">PGSSLMODE</span><span style="color: #000000">=require</span>
+<span style="color: #0000FF">PGUSER</span><span style="color: #000000">=postgres</span>
+<span style="color: #0000FF">PGPASSWORD</span><span style="color: #000000">=yourpassword!</span>
+</code></pre>
+				<p>Load the <code>.env</code> variables, and override others through command options.</p>
+				<pre><code class="language-sh"><span style="color: #000000">env </span><span style="color: #A31515">$(xargs </span><span style="color: #000000">&lt;</span><span style="color: #A31515"> .env)</span><span style="color: #000000"> pgzod --pghost 127.0.0.1 --pgport 5432</span>
+</code></pre>
+				<p><em>For more examples, please refer to the <a href="https://github.com/guzmonne/pgzod">Documentation</a></em></p>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- ROADMAP -->
+				<a href="#roadmap" id="roadmap" style="color: inherit; text-decoration: none;">
+					<h2>Roadmap</h2>
+				</a>
+				<ul>
+					<li>Find a better solution to deal with dates. Currently we treat them as strings.</li>
+					<li>Add support for more types.</li>
+					<li>Allow the user to override the current type mappings.</li>
+					<li>Add tests.</li>
+				</ul>
+				<p>See the <a href="https://github.com/guzmonne/pgzod/issues">open issues</a> for a complete list of proposed features (and known issues).</p>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- CONTRIBUTING -->
+				<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
+					<h2>Contributing</h2>
+				</a>
+				<p>Your contributions makes the open source community a fantastic place to learn, inspire, and create.</p>
+				<p>If you have a suggestion to improve this project, please fork the repo and create a pull request.
+				You can also create an issue with the tag &quot;enhancement.&quot;</p>
+				<p>Don&#39;t forget to give the project a star! Thanks again!</p>
+				<ol>
+					<li>Fork the Project</li>
+					<li>Create your Feature Branch (<code>git checkout -b feature/AmazingFeature</code>)</li>
+					<li>Commit your Changes (<code>git commit -m &#39;Add some AmazingFeature&#39;</code>)</li>
+					<li>Push to the Branch (<code>git push origin feature/AmazingFeature</code>)</li>
+					<li>Open a Pull Request</li>
+				</ol>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- LICENSE -->
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>Distributed under the MIT License. See <code>LICENSE.txt</code> for more information.</p>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- CONTACT -->
+				<a href="#contact" id="contact" style="color: inherit; text-decoration: none;">
+					<h2>Contact</h2>
+				</a>
+				<p>Your Name - <a href="https://twitter.com/guzmonne">@guzmonne</a> - <a href="mailto:guzmonne@hotmail.com">guzmonne@hotmail.com</a></p>
+				<p>Project Link: <a href="https://github.com/guzmonne/pgzod">https://github.com/guzmonne/pgzod</a></p>
+				<p align="right">(<a href="#top">back to top</a>)</p>
+				<!-- MARKDOWN LINKS & IMAGES -->
+				<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#options" class="tsd-kind-icon">Options</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#command" class="tsd-kind-icon">command</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#describe" class="tsd-kind-icon">describe</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#builder" class="tsd-kind-icon">builder</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#handler" class="tsd-kind-icon">handler</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
