@@ -599,6 +599,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/cli-progress@^3.9.2":
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/@types/cli-progress/-/cli-progress-3.9.2.tgz#6ca355f96268af39bee9f9307f0ac96145639c26"
+  integrity sha512-VO5/X5Ij+oVgEVjg5u0IXVe3JQSKJX+Ev8C5x+0hPy0AuWyW+bF8tbajR7cPFnDGhs7pidztcac+ccrDtk5teA==
+  dependencies:
+    "@types/node" "*"
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
@@ -1232,6 +1239,14 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
+cli-progress@^3.9.1:
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/cli-progress/-/cli-progress-3.9.1.tgz#a22eba6a20f53289fdd05d5ee8cb2cc8c28f866e"
+  integrity sha512-AXxiCe2a0Lm0VN+9L0jzmfQSkcZm5EYspfqXKaSIQKqIk+0hnkZ3/v1E9B39mkD6vYhKih3c/RPsJBSwq9O99Q==
+  dependencies:
+    colors "^1.1.2"
+    string-width "^4.2.0"
+
 cliui@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/cliui/-/cliui-6.0.0.tgz#511d702c0c4e41ca156d7d0e96021f23e13225b1"
@@ -1292,7 +1307,7 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-colors@^1.4.0:
+colors@^1.1.2, colors@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.4.0.tgz#c50491479d4c1bdaed2c9ced32cf7c7dc2360f78"
   integrity sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==

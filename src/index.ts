@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
 import { camelCase, pascalCase } from 'change-case';
-import { mkdir, rm, writeFile } from "fs/promises"
-import { join } from 'path';
-import { sql } from 'slonik';
-import type { Arguments, Argv } from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { join } from 'path';
+import { mkdir, rm, writeFile } from "fs/promises"
+import { sql } from 'slonik';
+import { Presets, SingleBar } from 'cli-progress';
+import type { Arguments, Argv } from 'yargs';
 import yargs from 'yargs/yargs';
 
-import type { CreatePoolProps } from './lib/createPool';
 import { createPool } from './lib/createPool';
+import type { CreatePoolProps } from './lib/createPool';
 
 /**
  * Default command name.
@@ -103,10 +104,6 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
     pguser,
   } = argv;
 
-  // Create/Re-create the schema output folder
-  if (clean) await rm(output, { recursive: true }).catch(() => `output folder ${output} doesn't exist`);
-  await mkdir(output).catch(() => `output folder ${output} already exist`);
-
   try {
     const pool = createPool({
       pgdatabase,
@@ -143,10 +140,26 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
       [`_${name}`]: `z.array(z.enum([${value}]))`
     }), {}));
 
+    // Create the progrss bar
+    const bar = new SingleBar({
+      format: '{bar} {percentage}% || {value}/{total} Actions || {message}',
+    }, Presets.shades_classic);
+    // Initialize it to the length of the tables plus the action to delete the current folder
+    // and write the last index file.
+    bar.start(tables.length + 2, 0, { speed: 'N/A' });
+    bar.update(1, { message: 'cleaning output folder' });
+
+    // Create/Re-create the schema output folder
+    if (clean) await rm(output, { recursive: true }).catch(() => `output folder ${output} doesn't exist`);
+    await mkdir(output).catch(() => `output folder ${output} already exist`);
+
     // The index variable will hold all the lines for the ./index.ts file.
     const index: string[] = [];
 
-    for (const { table_name } of tables) {
+    for (const [i, { table_name }] of tables.entries()) {
+      // Set the current progress
+      bar.update(i + 1, { message: `transforming table: ${table_name}` });
+
       const columns = await pool.many(sql<ColumnsInformation>`
       SELECT column_name, ordinal_position, column_default, is_nullable, data_type, udt_name
       FROM information_schema.columns
@@ -198,8 +211,12 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
       index.push(`export { ${name} } from './${file}';`);
     }
 
-    index.push('\n');
-    await writeFile(join(output, `index.ts`), index.join('\n'));
+    bar.update(tables.length + 1, { message: 'writing index file' });
+    await writeFile(join(output, `index.ts`), [...index, '\n'].join('\n'));
+
+    // Stop the progress bar.
+    bar.update(tables.length + 2, { message: 'done' });
+    bar.stop();
   } catch (err) {
     console.error(err);
   }
