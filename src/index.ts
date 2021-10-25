@@ -122,14 +122,14 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
     `);
 
     // Get all the enum custom types definitions.
-    const customEnums = await pool.many(sql<CustomEnumTypes>`
+    const customEnums = (await pool.query(sql<CustomEnumTypes>`
       SELECT t.typname as name, concat('"', string_agg(e.enumlabel, '", "'), '"') AS value
       FROM pg_type t
       JOIN pg_enum e on t.oid = e.enumtypid
       JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace
       WHERE n.nspname = 'franklin'
       GROUP BY name;
-    `);
+    `)).rows;
 
     // Create the types map
     const typesMap = createTypesMap(customEnums.reduce((acc, { name, value }) => ({

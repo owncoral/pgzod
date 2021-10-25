@@ -46,6 +46,7 @@
   "dependencies": {
     "change-case": "^4.1.2",
     "slonik": "^24.1.2",
-    "yargs": "^17.2.1"
+    "yargs": "^17.2.1",
+    "zod": "^3.11.4"
   }
 }

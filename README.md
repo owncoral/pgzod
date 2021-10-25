@@ -71,7 +71,7 @@ With `pgzod` that you can maintain all your tables in sync with Typescript throu
 
 > a TypeScript-first schema declaration and validation library. You can use a Zod schema for validation or as a normal type.
 
-It works great when you couple it with a PostgreSQL client like `[slonik][slonik]`.
+It works great when you couple it with a PostgreSQL client like [slonik][slonik].
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
