@@ -5,30 +5,29 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <!-- <a href="https://github.com/guzmonne/pgzod"> -->
-  <!--   <img src="images/logo.png" alt="Logo" width="80" height="80"> -->
-  <!-- </a> -->
+  <a href="https://github.com/franklin-homes/pgzod">
+    <img src="https://avatars.githubusercontent.com/u/76981916?s=200&v=4" alt="Logo" width="80" height="80">
+  </a>
 
 <h3 align="center"><code>pgzod</code></h3>
 
   <p align="center">
     Transform PostgreSQL schemas into Zod validators and types
     <br />
-    <a href="https://guzmonne.github.io/pgzod"><strong>Explore the docs »</strong></a>
+    <a href="https://franklin-homes.github.io/pgzod"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <!-- <a href="https://github.com/guzmonne/pgzod">View Demo</a> -->
+    <!-- <a href="https://github.com/franklin-homes/pgzod">View Demo</a> -->
     <!-- · -->
-    <a href="https://github.com/guzmonne/pgzod/issues">Report Bug</a>
+    <a href="https://github.com/franklin-homes/pgzod/issues">Report Bug</a>
     ·
-    <a href="https://github.com/guzmonne/pgzod/issues">Request Feature</a>
+    <a href="https://github.com/franklin-homes/pgzod/issues">Request Feature</a>
   </p>
 </div>
 
@@ -129,7 +128,7 @@ _For more examples, please refer to the [Documentation][docs]_
 - Allow the user to override the current type mappings.
 - Add tests.
 
-See the [open issues](https://github.com/guzmonne/pgzod/issues) for a complete list of proposed features (and known issues).
+See the [open issues](https://github.com/franklin-homes/pgzod/issues) for a complete list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -162,29 +161,28 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## 7. Contact
 
-Your Name - [@guzmonne](https://twitter.com/guzmonne) - guzmonne@hotmail.com
+Your Name - [@owncoral](https://twitter.com/franklin-homes) - support@owncoral.com
 
-Project Link: [https://github.com/guzmonne/pgzod](https://github.com/guzmonne/pgzod)
+Project Link: [https://github.com/franklin-homes/pgzod](https://github.com/franklin-homes/pgzod)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/guzmonne/pgzod.svg?style=for-the-badge
-[contributors-url]: https://github.com/guzmonne/pgzod/graphs/contributors
-[docs]: https://github.com/guzmonne/pgzod
-[forks-shield]: https://img.shields.io/github/forks/guzmonne/pgzod.svg?style=for-the-badge
-[forks-url]: https://github.com/guzmonne/pgzod/network/members
-[issues-shield]: https://img.shields.io/github/issues/guzmonne/pgzod.svg?style=for-the-badge
-[issues-url]: https://github.com/guzmonne/pgzod/issues
-[license-shield]: https://img.shields.io/github/license/guzmonne/pgzod.svg?style=for-the-badge
-[license-url]: https://github.com/guzmonne/pgzod/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/franklin-homes/pgzod.svg?style=for-the-badge
+[contributors-url]: https://github.com/franklin-homes/pgzod/graphs/contributors
+[docs]: https://github.com/franklin-homes/pgzod
+[forks-shield]: https://img.shields.io/github/forks/franklin-homes/pgzod.svg?style=for-the-badge
+[forks-url]: https://github.com/franklin-homes/pgzod/network/members
+[issues-shield]: https://img.shields.io/github/issues/franklin-homes/pgzod.svg?style=for-the-badge
+[issues-url]: https://github.com/franklin-homes/pgzod/issues
+[license-shield]: https://img.shields.io/github/license/franklin-homes/pgzod.svg?style=for-the-badge
+[license-url]: https://github.com/franklin-homes/pgzod/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/ing-gmonne
 [postgresql-env-vars]: https://www.postgresql.org/docs/current/libpq-envars.html
 [slonik]: https://www.npmjs.com/package/slonik
-[stars-shield]: https://img.shields.io/github/stars/guzmonne/pgzod.svg?style=for-the-badge
-[stars-url]: https://github.com/guzmonne/pgzod/stargazers
+[stars-shield]: https://img.shields.io/github/stars/franklin-homes/pgzod.svg?style=for-the-badge
+[stars-url]: https://github.com/franklin-homes/pgzod/stargazers
 [typescript]: https://typescript.com
 [yargs]: https://www.npmjs.com/package/yargs
 [zod]: https://www.npmjs.com/package/zod
