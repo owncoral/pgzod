@@ -21,7 +21,7 @@
     Transform PostgreSQL schemas into Zod validators and types
     <br />
     <a href="https://franklin-homes.github.io/pgzod"><strong>Explore the docs »</strong></a>
-    <br />
+    <!-- <br /> -->
     <br />
     <!-- <a href="https://github.com/franklin-homes/pgzod">View Demo</a> -->
     <!-- · -->
@@ -115,6 +115,10 @@ Load the `.env` variables, and override others through command options.
 ```sh
 env $(xargs < .env) pgzod --pghost 127.0.0.1 --pgport 5432
 ```
+
+> `pgzod` will not look for tables on your whole database just a single `schema`. You can
+> indicate your database `schema` through the`--schema` option. If you don't provide it, `pgzod`
+> runs against the `public` schemas.
 
 _For more examples, please refer to the [Documentation][docs]_
 
