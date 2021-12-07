@@ -1,25 +1,26 @@
 #!/usr/bin/env node
 
-import { camelCase, pascalCase } from 'change-case';
-import { hideBin } from 'yargs/helpers';
-import { join } from 'path';
-import { mkdir, rm, writeFile } from "fs/promises"
-import { sql } from 'slonik';
-import { Presets, SingleBar } from 'cli-progress';
-import type { Arguments, Argv } from 'yargs';
-import yargs from 'yargs/yargs';
+import { camelCase, pascalCase } from "change-case";
+import { hideBin } from "yargs/helpers";
+import { join } from "path";
+import { mkdir, rm, writeFile } from "fs/promises";
+import { sql, NotFoundError } from "slonik";
+import { Presets, SingleBar } from "cli-progress";
+import type { Arguments, Argv } from "yargs";
+import yargs from "yargs/yargs";
+import dedent from "dedent";
 
-import { createPool } from './lib/createPool';
-import type { CreatePoolProps } from './lib/createPool';
+import { createPool } from "./lib/createPool";
+import type { CreatePoolProps } from "./lib/createPool";
 
 /**
  * Default command name.
  */
-export const command = 'pgzod';
+export const command = "pgzod";
 /**
  * Default command description.
  */
-export const describe = 'create Zod types for a postgres schema';
+export const describe = "create Zod types for a postgres schema";
 /**
  * Default command options.
  */
@@ -42,61 +43,66 @@ export type Options = {
  * Please refer to Yargs documentation to see how it works:
  * https://www.npmjs.com/package/yargs
  */
-export const builder: (args: Argv<Record<string, unknown>>) => Argv<Options> = (y) => y
-  .options({
-    clean: {
-      type: 'boolean',
-      describe: 'delete the current zod schema folder',
-      default: true,
-    },
-    output: {
-      type: 'string',
-      describe: 'zod schema output folder',
-      default: join(__dirname, '.'),
-    },
-    pgdatabase: {
-      type: 'string',
-      describe: 'database name',
-      default: 'postgres',
-    },
-    pghost: {
-      type: 'string',
-      describe: 'database host',
-      default: '127.0.0.1',
-    },
-    pgpassword: {
-      type: 'string',
-      describe: 'database user password',
-      default: '',
-    },
-    pgport: {
-      type: 'string',
-      describe: 'database host port',
-      default: '5432',
-    },
-    pguser: {
-      type: 'string',
-      describe: 'database user',
-      default: 'postgres',
-    },
-    schema: {
-      type: 'string',
-      describe: 'schema to convert into zod schema',
-      default: 'public',
-    },
-  })
-  // Deactivate the use of environment variables for option configurations.
-  .env(true);
+export const builder: (args: Argv<Record<string, unknown>>) => Argv<Options> = (
+  y
+) =>
+  y
+    .options({
+      clean: {
+        type: "boolean",
+        describe: "delete the current zod schema folder",
+        default: true,
+      },
+      output: {
+        type: "string",
+        describe: "zod schema output folder",
+        default: "/tmp/pgzod",
+      },
+      pgdatabase: {
+        type: "string",
+        describe: "database name",
+        default: "postgres",
+      },
+      pghost: {
+        type: "string",
+        describe: "database host",
+        default: "127.0.0.1",
+      },
+      pgpassword: {
+        type: "string",
+        describe: "database user password",
+        default: "",
+      },
+      pgport: {
+        type: "string",
+        describe: "database host port",
+        default: "5432",
+      },
+      pguser: {
+        type: "string",
+        describe: "database user",
+        default: "postgres",
+      },
+      schema: {
+        type: "string",
+        describe: "schema to convert into zod schema",
+        default: "public",
+      },
+    })
+    // Deactivate the use of environment variables for option configurations.
+    .env(true);
 /**
  * Yargs default command handler function.
  * Defaults are duplicated to allow importing this function from another module.
  * @param argv - Command options.
  */
-export const handler = async (argv: Arguments<Options> | Options): Promise<void> => {
+export const handler = async (
+  argv: Arguments<Options> | Options
+): Promise<void> => {
   const {
     clean = true,
-    output = join(__dirname, '.'),
-    schema = 'public',
+    output = join(__dirname, "."),
+    schema = "public",
     pgdatabase,
     pghost,
     pgpassword,
@@ -113,44 +119,71 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
       pguser,
     });
 
+    console.log(`Getting tables for schema: ${schema}`);
+
     // Get the list of tables inside the schema.
-    const tables = await pool.many(sql<InformationSchema>`
-      SELECT table_name FROM information_schema.tables WHERE table_schema = ${schema};
-    `);
+    let tables: readonly InformationSchema[];
+    try {
+      tables = await pool.many(sql<InformationSchema>`
+         SELECT table_name FROM information_schema.tables WHERE table_schema = ${schema};
+     `);
+    } catch (err) {
+      if (err instanceof NotFoundError) {
+        console.log(dedent`
+          No tables where found on schema ${schema}.
+          Please select another schema through the "--schema" option.
+        `);
+      }
+      console.error(err);
+      process.exit(1);
+    }
 
     // Get all the enum custom types definitions.
-    const customEnums = (await pool.query(sql<CustomEnumTypes>`
+    const customEnums = (
+      await pool.query(sql<CustomEnumTypes>`
       SELECT t.typname as name, concat('"', string_agg(e.enumlabel, '", "'), '"') AS value
       FROM pg_type t
       JOIN pg_enum e on t.oid = e.enumtypid
       JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace
       WHERE n.nspname = 'franklin'
       GROUP BY name;
-    `)).rows;
+    `)
+    ).rows;
 
     // Create the types map
-    const typesMap = createTypesMap(customEnums.reduce((acc, { name, value }) => ({
-      ...acc,
-      [name]: `z.enum([${value}])`,
-      // Add support for array of custom enum types. From PostgreSQL logs:
-      //
-      // > When you define a new base type, PostgreSQL automatically provides support for arrays
-      // > of that type. The array type typically has the same name as the base type with the
-      // > underscore character (_) prepended.
-      [`_${name}`]: `z.array(z.enum([${value}]))`
-    }), {}));
+    const typesMap = createTypesMap(
+      customEnums.reduce(
+        (acc, { name, value }) => ({
+          ...acc,
+          [name]: `z.enum([${value}])`,
+          // Add support for array of custom enum types. From PostgreSQL logs:
+          //
+          // > When you define a new base type, PostgreSQL automatically provides support for arrays
+          // > of that type. The array type typically has the same name as the base type with the
+          // > underscore character (_) prepended.
+          [`_${name}`]: `z.array(z.enum([${value}]))`,
+        }),
+        {}
+      )
+    );
 
     // Create the progrss bar
-    const bar = new SingleBar({
-      format: '{bar} {percentage}% || {value}/{total} Actions || {message}',
-    }, Presets.shades_classic);
+    const bar = new SingleBar(
+      {
+        format: "{bar} {percentage}% || {value}/{total} Actions || {message}",
+      },
+      Presets.shades_classic
+    );
     // Initialize it to the length of the tables plus the action to delete the current folder
     // and write the last index file.
-    bar.start(tables.length + 2, 0, { speed: 'N/A' });
-    bar.update(1, { message: 'cleaning output folder' });
+    bar.start(tables.length + 2, 0, { speed: "N/A" });
+    bar.update(1, { message: "cleaning output folder" });
 
     // Create/Re-create the schema output folder
-    if (clean) await rm(output, { recursive: true }).catch(() => `output folder ${output} doesn't exist`);
+    if (clean)
+      await rm(output, { recursive: true }).catch(
+        () => `output folder ${output} doesn't exist`
+      );
     await mkdir(output).catch(() => `output folder ${output} already exist`);
 
     // The index variable will hold all the lines for the ./index.ts file.
@@ -165,7 +198,7 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
       FROM information_schema.columns
       WHERE table_name = ${table_name}
       ORDER BY ordinal_position;
-    `)
+    `);
 
       const template = [];
       // Remove editorconfig checks on auto-generated files.
@@ -173,12 +206,18 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
 
       // Add json parsing according to Zod documentation.
       // https://github.com/colinhacks/zod#json-type
-      if (columns.some((column) => column.udt_name === 'jsonb')) {
+      if (columns.some((column) => column.udt_name === "jsonb")) {
         template.push(`type Literal = boolean | null | number | string;`);
-        template.push(`type Json = Literal | { [key: string]: Json } | Json[];`);
-        template.push(`const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);`);
+        template.push(
+          `type Json = Literal | { [key: string]: Json } | Json[];`
+        );
+        template.push(
+          `const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);`
+        );
         template.push(`const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>`);
-        template.push(`  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])`);
+        template.push(
+          `  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])`
+        );
         template.push(`);\n`);
       }
 
@@ -190,13 +229,13 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
         let line = `${name}: `;
 
         const type = typesMap[column.udt_name];
-        line += type
+        line += type;
 
-        const isNullable = column.is_nullable === 'YES';
-        line += isNullable ? '.nullable().optional()' : '';
+        const isNullable = column.is_nullable === "YES";
+        line += isNullable ? ".nullable().optional()" : "";
 
         const isOptional = column.column_default !== null;
-        line += isOptional ? '.optional()' : '';
+        line += isOptional ? ".optional()" : "";
 
         template.push(`  ${line},`);
       }
@@ -205,17 +244,17 @@ export const handler = async (argv: Arguments<Options> | Options): Promise<void>
       template.push(`export type ${name}T = z.infer<typeof ${name}>;\n`);
 
       const file = camelCase(name);
-      await writeFile(join(output, `${file}.ts`), template.join('\n'));
+      await writeFile(join(output, `${file}.ts`), template.join("\n"));
 
       index.push(`export type { ${name}T } from './${file}';`);
       index.push(`export { ${name} } from './${file}';`);
     }
 
-    bar.update(tables.length + 1, { message: 'writing index file' });
-    await writeFile(join(output, `index.ts`), [...index, '\n'].join('\n'));
+    bar.update(tables.length + 1, { message: "writing index file" });
+    await writeFile(join(output, `index.ts`), [...index, "\n"].join("\n"));
 
     // Stop the progress bar.
-    bar.update(tables.length + 2, { message: 'done' });
+    bar.update(tables.length + 2, { message: "done" });
     bar.stop();
   } catch (err) {
     console.error(err);
@@ -244,12 +283,13 @@ function createTypesMap(customEnumsEntries: Record<string, string>) {
     text: `z.string()`,
     // TODO: Find a better way to handle dates.
     timestamptz: `z.string()`,
-    uuid: 'z.string().uuid()',
+    uuid: "z.string().uuid()",
     varchar: `z.string()`,
   };
-  const map = { ...ZOD_TYPES_OVERRIDE, ...customEnumsEntries }
+  const map = { ...ZOD_TYPES_OVERRIDE, ...customEnumsEntries };
   const proxy = new Proxy(map, {
-    get: (object, prop: string) => prop in object ? object[prop] : `z.${prop}()`,
+    get: (object, prop: string) =>
+      prop in object ? object[prop] : `z.${prop}()`,
   });
   return proxy;
 }
@@ -261,7 +301,7 @@ function createTypesMap(customEnumsEntries: Record<string, string>) {
  */
 type InformationSchema = {
   table_name: string;
-}
+};
 /**
  * Represents the output of a query to get the list of custom enum types.
  */
@@ -274,7 +314,7 @@ type CustomEnumTypes = {
    * List of valid enum values as a concatenated list of string separated by a comma (,).
    */
   value: string;
-}
+};
 /**
  * Represents the output of the information_schema.colums table.
  */
@@ -282,10 +322,10 @@ type ColumnsInformation = {
   column_name: string;
   ordinal_position: number;
   column_default: string | null;
-  is_nullable: 'YES' | 'NO';
+  is_nullable: "YES" | "NO";
   data_type: string;
   udt_name: string;
-}
+};
 // =================
 // Standalone Module
 // =================
@@ -293,7 +333,7 @@ if (require.main === module) {
   yargs(hideBin(process.argv))
     .env(true)
     .command({
-      command: '$0',
+      command: "$0",
       describe,
       builder,
       handler,
