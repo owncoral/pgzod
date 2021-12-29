@@ -273,6 +273,7 @@ function createTypesMap(customEnumsEntries: Record<string, string>) {
    */
   const ZOD_TYPES_OVERRIDE: Record<string, string> = {
     bool: `z.boolean()`,
+    bpchar: `z.string()`,
     citext: `z.string()`,
     // TODO: Find a better way to handle dates.
     date: `z.string()`,
