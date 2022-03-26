@@ -125,7 +125,7 @@ export const handler = async (
     let tables: readonly InformationSchema[];
     try {
       tables = await pool.many(sql<InformationSchema>`
-         SELECT table_name FROM information_schema.tables WHERE table_schema = ${schema};
+         SELECT table_name FROM information_schema.tables WHERE table_schema = ${schema} ORDER BY table_name;
      `);
     } catch (err) {
       if (err instanceof NotFoundError) {
