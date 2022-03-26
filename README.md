@@ -11,7 +11,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/franklin-homes/pgzod">
+  <a href="https://github.com/owncoral-homes/pgzod">
     <img src="https://avatars.githubusercontent.com/u/76981916?s=200&v=4" alt="Logo" width="80" height="80">
   </a>
 
@@ -20,14 +20,14 @@
   <p align="center">
     Transform PostgreSQL schemas into Zod validators and types
     <br />
-    <a href="https://franklin-homes.github.io/pgzod"><strong>Explore the docs »</strong></a>
+    <a href="https://owncoral-homes.github.io/pgzod"><strong>Explore the docs »</strong></a>
     <!-- <br /> -->
     <br />
-    <!-- <a href="https://github.com/franklin-homes/pgzod">View Demo</a> -->
+    <!-- <a href="https://github.com/owncoral-homes/pgzod">View Demo</a> -->
     <!-- · -->
-    <a href="https://github.com/franklin-homes/pgzod/issues">Report Bug</a>
+    <a href="https://github.com/owncoral-homes/pgzod/issues">Report Bug</a>
     ·
-    <a href="https://github.com/franklin-homes/pgzod/issues">Request Feature</a>
+    <a href="https://github.com/owncoral-homes/pgzod/issues">Request Feature</a>
   </p>
 </div>
 
@@ -132,7 +132,7 @@ _For more examples, please refer to the [Documentation][docs]_
 - Allow the user to override the current type mappings.
 - Add tests.
 
-See the [open issues](https://github.com/franklin-homes/pgzod/issues) for a complete list of proposed features (and known issues).
+See the [open issues](https://github.com/owncoral-homes/pgzod/issues) for a complete list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -165,28 +165,28 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## 7. Contact
 
-Your Name - [@owncoral](https://twitter.com/franklin-homes) - support@owncoral.com
+Your Name - [@owncoral](https://twitter.com/owncoral-homes) - support@owncoral.com
 
-Project Link: [https://github.com/franklin-homes/pgzod](https://github.com/franklin-homes/pgzod)
+Project Link: [https://github.com/owncoral-homes/pgzod](https://github.com/owncoral-homes/pgzod)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/franklin-homes/pgzod.svg?style=for-the-badge
-[contributors-url]: https://github.com/franklin-homes/pgzod/graphs/contributors
-[docs]: https://github.com/franklin-homes/pgzod
-[forks-shield]: https://img.shields.io/github/forks/franklin-homes/pgzod.svg?style=for-the-badge
-[forks-url]: https://github.com/franklin-homes/pgzod/network/members
-[issues-shield]: https://img.shields.io/github/issues/franklin-homes/pgzod.svg?style=for-the-badge
-[issues-url]: https://github.com/franklin-homes/pgzod/issues
-[license-shield]: https://img.shields.io/github/license/franklin-homes/pgzod.svg?style=for-the-badge
-[license-url]: https://github.com/franklin-homes/pgzod/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/owncoral-homes/pgzod.svg?style=for-the-badge
+[contributors-url]: https://github.com/owncoral-homes/pgzod/graphs/contributors
+[docs]: https://github.com/owncoral-homes/pgzod
+[forks-shield]: https://img.shields.io/github/forks/owncoral-homes/pgzod.svg?style=for-the-badge
+[forks-url]: https://github.com/owncoral-homes/pgzod/network/members
+[issues-shield]: https://img.shields.io/github/issues/owncoral-homes/pgzod.svg?style=for-the-badge
+[issues-url]: https://github.com/owncoral-homes/pgzod/issues
+[license-shield]: https://img.shields.io/github/license/owncoral-homes/pgzod.svg?style=for-the-badge
+[license-url]: https://github.com/owncoral-homes/pgzod/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [postgresql-env-vars]: https://www.postgresql.org/docs/current/libpq-envars.html
 [slonik]: https://www.npmjs.com/package/slonik
-[stars-shield]: https://img.shields.io/github/stars/franklin-homes/pgzod.svg?style=for-the-badge
-[stars-url]: https://github.com/franklin-homes/pgzod/stargazers
+[stars-shield]: https://img.shields.io/github/stars/owncoral-homes/pgzod.svg?style=for-the-badge
+[stars-url]: https://github.com/owncoral-homes/pgzod/stargazers
 [typescript]: https://typescript.com
 [yargs]: https://www.npmjs.com/package/yargs
 [zod]: https://www.npmjs.com/package/zod
