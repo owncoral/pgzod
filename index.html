@@ -103,7 +103,7 @@
 					<h2>1. About The Project</h2>
 				</a>
 				<p>Keeping Typescript types in sync with your PostgreSQL database schemas is very useful but challenging.
-					With <code>pgzod</code> that you can maintain all your tables in sync with Typescript through
+					With PGZod that you can maintain all your tables in sync with Typescript through
 				<a href="https://www.npmjs.com/package/zod">&quot;Zod&quot;</a>. Zod is, in their own words:</p>
 				<blockquote>
 					<p>a TypeScript-first schema declaration and validation library. You can use a Zod schema for validation or as a normal type.</p>
@@ -124,7 +124,7 @@
 				<a href="#2-getting-started" id="2-getting-started" style="color: inherit; text-decoration: none;">
 					<h2>2. Getting Started</h2>
 				</a>
-				<p>The best way to run <code>pgzod</code> is by installing it globally or using it through <code>npx</code>.</p>
+				<p>The best way to run PGZod is by installing it globally or using it through <code>npx</code>.</p>
 				<ul>
 					<li>npm<pre><code class="language-sh"><span style="color: #000000">npm install pgzod -g</span>
 </code></pre>
@@ -133,7 +133,7 @@
 </code></pre>
 					</li>
 				</ul>
-				<p>If you want to use <code>npx</code>, you don&#39;t have to install <code>pgzod</code> run:</p>
+				<p>If you want to use <code>npx</code>, you don&#39;t have to install PGZod run:</p>
 				<pre><code class="language-sh"><span style="color: #008000"># Shows the command help.</span>
 <span style="color: #000000">npx pgzod --help</span>
 </code></pre>
@@ -142,11 +142,11 @@
 				<a href="#3-usage" id="3-usage" style="color: inherit; text-decoration: none;">
 					<h2>3. Usage</h2>
 				</a>
-				<p>You can use <code>pgzod</code> from the command line. It needs the credentials and the address of the live
+				<p>You can use PGZod from the command line. It needs the credentials and the address of the live
 					database from where to read the schema. You can provide this information through command options or
 				environment variables. All the <a href="https://www.postgresql.org/docs/current/libpq-envars.html">variables from PostgreSQL</a> are supported.</p>
 				<p>Your database credentials could be stored on a local <code>.env</code> file, or even better, on a secret
-				manager. You then load the credentials to your current session and run the <code>pgzod</code> command.</p>
+				manager. You then load the credentials to your current session and run the PGZod command.</p>
 				<p>For example, you could build the following <code>.env</code> file:</p>
 				<pre><code class="language-ini"><span style="color: #0000FF">PGHOST</span><span style="color: #000000">=some.postgresql.host</span>
 <span style="color: #0000FF">PGPORT</span><span style="color: #000000">=12345</span>
@@ -156,14 +156,35 @@
 <span style="color: #0000FF">PGPASSWORD</span><span style="color: #000000">=yourpassword!</span>
 </code></pre>
 				<p>Load the <code>.env</code> variables, and override others through command options.</p>
-				<pre><code class="language-sh"><span style="color: #000000">env </span><span style="color: #A31515">$(xargs </span><span style="color: #000000">&lt;</span><span style="color: #A31515"> .env)</span><span style="color: #000000"> pgzod --pghost 127.0.0.1 --pgport 5432</span>
+				<pre><code class="language-sh"><span style="color: #000000">env </span><span style="color: #A31515">$(xargs </span><span style="color: #000000">&lt;</span><span style="color: #A31515"> .env)</span><span style="color: #000000"> pgzod --pghost 127.0.0.1 --pgport 5432 --schema public</span>
 </code></pre>
 				<blockquote>
-					<p><code>pgzod</code> will not look for tables on your whole database just a single <code>schema</code>. You can
-						indicate your database <code>schema</code> through the<code>--schema</code> option. If you don&#39;t provide it, <code>pgzod</code>
+					<p>PGZod will not look for tables on your whole database just a single <code>schema</code>. You can
+						indicate your database <code>schema</code> through the<code>--schema</code> option. If you don&#39;t provide it, PGZod
 					runs against the <code>public</code> schemas.</p>
 				</blockquote>
 				<p><em>For more examples, please refer to the <a href="https://github.com/owncoral/pgzod">Documentation</a></em></p>
+				<a href="#strategies" id="strategies" style="color: inherit; text-decoration: none;">
+					<h3>Strategies</h3>
+				</a>
+				<p>PGZod offers the concept of <code>strategies</code> to define how it should create the <code>Zod</code> validator files. Here
+				is the current list of strategies exposed:</p>
+				<table>
+					<thead>
+						<tr>
+							<th>Value</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><code>write</code></td>
+							<td>Creates <code>Zod</code> validators considering only writes to the table. Columns that have default values will be marked as <code>optional</code>.</td>
+						</tr>
+						<tr>
+							<td><code>readwrite</code></td>
+							<td>Creates <code>Zod</code> validators for both read and write actions. PGZod will create two validators for each <code>table</code> with the <code>Read</code> and <code>Write</code> suffix to differentiate both actions. <strong>This is probably the strategy you want to work with</strong>.</td>
+						</tr>
+				</tbody></table>
 				<p align="right">(<a href="#top">back to top</a>)</p>
 				<!-- ROADMAP -->
 				<a href="#4-roadmap" id="4-roadmap" style="color: inherit; text-decoration: none;">
