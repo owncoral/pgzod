@@ -48,7 +48,7 @@
 ## 1. About The Project
 
 Keeping Typescript types in sync with your PostgreSQL database schemas is very useful but challenging.
-With `pgzod` that you can maintain all your tables in sync with Typescript through
+With PGZod that you can maintain all your tables in sync with Typescript through
 ["Zod"][zod]. Zod is, in their own words:
 
 > a TypeScript-first schema declaration and validation library. You can use a Zod schema for validation or as a normal type.
@@ -69,7 +69,7 @@ It works great when you couple it with a PostgreSQL client like [slonik][slonik]
 <!-- GETTING STARTED -->
 ## 2. Getting Started
 
-The best way to run `pgzod` is by installing it globally or using it through `npx`.
+The best way to run PGZod is by installing it globally or using it through `npx`.
 
 * npm
   ```sh
@@ -80,7 +80,7 @@ The best way to run `pgzod` is by installing it globally or using it through `np
   yarn global add pgzod
   ```
 
-If you want to use `npx`, you don't have to install `pgzod` run:
+If you want to use `npx`, you don't have to install PGZod run:
 
 ```sh
 # Shows the command help.
@@ -92,12 +92,12 @@ npx pgzod --help
 <!-- USAGE EXAMPLES -->
 ## 3. Usage
 
-You can use `pgzod` from the command line. It needs the credentials and the address of the live
+You can use PGZod from the command line. It needs the credentials and the address of the live
 database from where to read the schema. You can provide this information through command options or
 environment variables. All the [variables from PostgreSQL][postgresql-env-vars] are supported.
 
 Your database credentials could be stored on a local `.env` file, or even better, on a secret
-manager. You then load the credentials to your current session and run the `pgzod` command.
+manager. You then load the credentials to your current session and run the PGZod command.
 
 For example, you could build the following `.env` file:
 
@@ -113,14 +113,25 @@ PGPASSWORD=yourpassword!
 Load the `.env` variables, and override others through command options.
 
 ```sh
-env $(xargs < .env) pgzod --pghost 127.0.0.1 --pgport 5432
+env $(xargs < .env) pgzod --pghost 127.0.0.1 --pgport 5432 --schema public
 ```
 
-> `pgzod` will not look for tables on your whole database just a single `schema`. You can
-> indicate your database `schema` through the`--schema` option. If you don't provide it, `pgzod`
+> PGZod will not look for tables on your whole database just a single `schema`. You can
+> indicate your database `schema` through the`--schema` option. If you don't provide it, PGZod
 > runs against the `public` schemas.
 
 _For more examples, please refer to the [Documentation][docs]_
+
+### Strategies
+
+PGZod offers the concept of `strategies` to define how it should create the `Zod` validator files. Here
+is the current list of strategies exposed:
+
+| Value | Description |
+| ---   | ---         |
+| `write` | Creates `Zod` validators considering only writes to the table. Columns that have default values will be marked as `optional`. |
+| `readwrite` | Creates `Zod` validators for both read and write actions. PGZod will create two validators for each `table` with the `Read` and `Write` suffix to differentiate both actions. **This is probably the strategy you want to work with**. |
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
