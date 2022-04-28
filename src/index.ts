@@ -5,13 +5,18 @@ import { hideBin } from "yargs/helpers";
 import { join } from "path";
 import { mkdir, rm, writeFile } from "fs/promises";
 import { sql, DatabasePool } from "slonik";
-import { Presets, SingleBar } from "cli-progress";
 import type { Arguments, Argv } from "yargs";
 import yargs from "yargs/yargs";
+import { z } from "zod";
 
 import { createPool } from "./lib/createPool";
 import type { CreatePoolProps } from "./lib/createPool";
 
+/**
+ * PGZod strategy validator.
+ */
+const Strategy = z.union([z.literal("write"), z.literal("readwrite")]);
+type StrategyT = z.infer<typeof Strategy>;
 /**
  * Default command name.
  */
@@ -39,7 +44,7 @@ export type Options = {
   /**
    * Select the strategy to be used to create the `Zod` schemas.
    */
-  strategy: string;
+  strategy?: string;
 } & CreatePoolProps;
 /**
  * Yargs default command builder function.
@@ -128,8 +133,7 @@ export const handler = async (
       pguser,
     });
 
-    console.log(`Getting tables for schema: ${schema}`);
-
+    console.info(`Fertching table list for schema: ${schema}`);
     // Get the list of tables inside the schema.
     const tables = await pool.any(sql<InformationSchema>`
       SELECT table_name FROM information_schema.tables WHERE table_schema = ${schema} ORDER BY table_name`);
@@ -139,6 +143,7 @@ export const handler = async (
       process.exit(1);
     }
 
+    console.info(`Fetching enums`);
     // Get all the enum custom types definitions.
     const customEnums = await pool.any(sql<CustomEnumTypes>`
         SELECT t.typname as name, concat('"', string_agg(e.enumlabel, '", "'), '"') AS value
@@ -174,21 +179,13 @@ export const handler = async (
     await mkdir(output).catch(() => `output folder ${output} already exist`);
 
     // Run the correct strategy to generate the files.
-    if (strategy === "write") {
-      runWriteStrategy({
-        output,
-        pool,
-        tables,
-        typesMap,
-      });
-    } else if (strategy === "readwrite") {
-      runReadWriteStrategy({
-        output,
-        pool,
-        tables,
-        typesMap,
-      });
-    }
+    runWithStrategy({
+      output,
+      pool,
+      strategy: Strategy.parse(strategy),
+      tables,
+      typesMap,
+    });
   } catch (err) {
     console.error(err);
   }
@@ -197,148 +194,58 @@ export const handler = async (
 // Functions
 // =========
 /**
- * Creates a new progress bar.
- */
-function createProgressBar() {
-  return new SingleBar(
-    {
-      format: "{bar} {percentage}% || {value}/{total} Actions || {message}",
-    },
-    Presets.shades_classic
-  );
-}
-/**
- * Creates the PGZod files using the `write` strategy.
+ * Create the PGZod files depending on a strategy.
  *
  * The `write` strategy only creates types for inserting data on the table. It's configured as the
- * default options for backwards compatibility with previous versions of PGZod.
- *
- * This strategy is useful of your access patterns on your table are the same for reads and writes.
- * @param options - Strategy configuration options.
- *
- */
-async function runWriteStrategy({
-  output,
-  pool,
-  tables,
-  typesMap,
-}: StrategyOptions) {
-  // Create the progrss bar
-  const bar = createProgressBar();
-  // Initialize it to the length of the tables plus the action to delete the current folder
-  // and write the last index file.
-  bar.start(tables.length + 2, 0, { speed: "N/A" });
-  bar.update(1, { message: "cleaning output folder" });
-
-  // The index variable will hold all the lines for the ./index.ts file.
-  const index: string[] = [];
-
-  for (const [i, { table_name }] of tables.entries()) {
-    // Set the current progress
-    bar.update(i + 1, { message: `transforming table: ${table_name}` });
-
-    const columns = await pool.many(sql<ColumnsInformation>`
-      SELECT column_name, ordinal_position, column_default, is_nullable, data_type, udt_name
-      FROM information_schema.columns
-      WHERE table_name = ${table_name}
-      ORDER BY ordinal_position;
-    `);
-
-    const template = [];
-    // Remove editorconfig checks on auto-generated files.
-    template.push(`import { z } from 'zod';\n`);
-
-    // Add json parsing according to Zod documentation.
-    // https://github.com/colinhacks/zod#json-type
-    if (columns.some((column) => column.udt_name === "jsonb")) {
-      template.push(`type Literal = boolean | null | number | string;`);
-      template.push(`type Json = Literal | { [key: string]: Json } | Json[];`);
-      template.push(
-        `const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);`
-      );
-      template.push(`const jsonSchema: z.ZodSchema<Json> = z.lazy(() =>`);
-      template.push(
-        `  z.union([literalSchema, z.array(jsonSchema), z.record(jsonSchema)])`
-      );
-      template.push(`);\n`);
-    }
-
-    const name = pascalCase(table_name);
-    template.push(`export const ${name} = z.object({`);
-
-    for (const column of columns) {
-      const name = column.column_name;
-      let line = `${name}: `;
-
-      const type = typesMap[column.udt_name];
-      line += type;
-
-      const isNullable = column.is_nullable === "YES";
-      line += isNullable ? ".nullable().optional()" : "";
-
-      const isOptional = column.column_default !== null;
-      line += isOptional ? ".optional()" : "";
-
-      template.push(`  ${line},`);
-    }
-
-    template.push(`});\n`);
-    template.push(`export type ${name}T = z.infer<typeof ${name}>;\n`);
-
-    const file = camelCase(name);
-    await writeFile(join(output, `${file}.ts`), template.join("\n"));
-
-    index.push(`export type { ${name}T } from './${file}';`);
-    index.push(`export { ${name} } from './${file}';`);
-  }
-
-  bar.update(tables.length + 1, { message: "writing index file" });
-  await writeFile(join(output, `index.ts`), [...index, "\n"].join("\n"));
-
-  // Stop the progress bar.
-  bar.update(tables.length + 2, { message: "done" });
-  bar.stop();
-}
-/**
- * Creates the PGZod files using the `readwrite` strategy.
+ * default options for backwards compatibility with previous versions of PGZod. This strategy is
+ * useful of your access patterns on your table are the same for reads and writes.
  *
  * The `reqdwrite` strategy will make PGZod create two types for each table. One for `reads` and one
- * for `writes`. Each type will be suffixed with `Read` or `Write`.
- *
- * This strategy is useful when you have access patterns on your table that differ between `reads`
- * and `writes`. For example, if you have a `column` with a default value, including it on `writes`
- * is optional, but on `read` it will always be there.
- * @param options - Strategy configuration options.
+ * for `writes`. Each type will be suffixed with `Read` or `Write`. This strategy is useful when you
+ * have access patterns on your table that differ between `reads` and `writes`. For example, if
+ * you have a `column` with a default value, including it on `writes` is optional, but on `read` it
+ * will always be there.
  */
-async function runReadWriteStrategy({
+async function runWithStrategy({
   output,
   pool,
   tables,
   typesMap,
+  strategy = "write",
 }: StrategyOptions) {
-  // Create the progrss bar
-  const bar = createProgressBar();
-  // Initialize it to the length of the tables times two (we create two Zod types per table) plus the
-  // action to delete the current folder and write the last index file.
-  bar.start(tables.length * 2 + 2, 0, { speed: "N/A" });
+  // Create the spinner
+  console.info("Fetching tables metadata");
 
   // The index variable will hold all the lines for the ./index.ts file.
   const index: string[] = [];
-  let i = 0;
 
   for (const table of tables.values()) {
     const { table_name } = table;
-    for (const filetype of ["read", "write"]) {
+    for (const filetype of strategy === "write"
+      ? ["write"]
+      : ["read", "write"]) {
       // Set the current progress
-      bar.update(i++, {
-        message: `transforming table: ${table_name} ${filetype}`,
-      });
-
-      const columns = await pool.many(sql<ColumnsInformation>`
-        SELECT column_name, ordinal_position, column_default, is_nullable, data_type, udt_name
+      console.info(`Fetching columns metadata for table: ${table_name}`);
+      const columns = await pool.any(sql<ColumnsInformation>`
+        SELECT is_generated, column_name, ordinal_position, column_default, is_nullable, data_type, udt_name
         FROM information_schema.columns
         WHERE table_name = ${table_name}
         ORDER BY ordinal_position`);
+
+      console.info(`Fetching table ${table_name} foreign keys`);
+      const fk = await pool.any(sql<{ column: string }>`
+        SELECT
+          kcu.column_name as column
+        FROM
+          information_schema.table_constraints AS tc
+          JOIN information_schema.key_column_usage AS kcu
+            ON tc.constraint_name = kcu.constraint_name
+            AND tc.table_schema = kcu.table_schema
+          JOIN information_schema.constraint_column_usage AS ccu
+            ON ccu.constraint_name = tc.constraint_name
+            AND ccu.table_schema = tc.table_schema
+        WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name=${table_name}`);
+      const fkColumns = fk.map((row) => row.column);
 
       const template = [];
       // Remove editorconfig checks on auto-generated files.
@@ -361,7 +268,9 @@ async function runReadWriteStrategy({
         template.push(`);\n`);
       }
 
-      const name = pascalCase(table_name + "_" + filetype);
+      const name = pascalCase(
+        strategy === "write" ? table_name : table_name + "_" + filetype
+      );
       template.push(`export const ${name} = z.object({`);
 
       for (const column of columns) {
@@ -371,13 +280,17 @@ async function runReadWriteStrategy({
         const type = typesMap[column.udt_name];
         line += type;
 
-        const isNullable =
-          column.column_default !== null && column.is_nullable === "YES";
-        line += isNullable ? ".nullable().optional()" : "";
+        if (!fkColumns.includes(name)) {
+          const isNullable = column.is_nullable === "YES";
+          line += isNullable ? ".nullable().optional()" : "";
 
-        const isOptional =
-          !isNullable && column.column_default !== null && filetype === "write";
-        line += isOptional ? ".optional()" : "";
+          const isOptional =
+            !isNullable &&
+            filetype === "write" &&
+            (column.is_generated === "ALWAYS" ||
+              column.column_default !== null);
+          line += isOptional ? ".optional()" : "";
+        }
 
         template.push(`  ${line},`);
       }
@@ -393,12 +306,10 @@ async function runReadWriteStrategy({
     }
   }
 
-  bar.update(i++, { message: "writing index file" });
+  console.info("Writing index file");
   await writeFile(join(output, `index.ts`), [...index, "\n"].join("\n"));
 
-  // Stop the progress bar.
-  bar.update(i++, { message: "done" });
-  bar.stop();
+  console.info("Done");
 }
 /**
  * Returns a PostgreSQL to Zod types map.
@@ -457,21 +368,23 @@ type CustomEnumTypes = {
  * Represents the output of the information_schema.colums table.
  */
 type ColumnsInformation = {
-  column_name: string;
-  ordinal_position: number;
   column_default: string | null;
-  is_nullable: "YES" | "NO";
+  column_name: string;
   data_type: string;
+  is_generated: "NEVER" | "ALWAYS";
+  is_nullable: "YES" | "NO";
+  ordinal_position: number;
   udt_name: string;
 };
 /**
  * Represents the options needed to run a PGZod strategy.
  */
 type StrategyOptions = {
-  tables: readonly InformationSchema[];
-  pool: DatabasePool;
-  typesMap: { [key: string]: string };
   output: string;
+  pool: DatabasePool;
+  strategy?: StrategyT;
+  tables: readonly InformationSchema[];
+  typesMap: { [key: string]: string };
 };
 // =================
 // Standalone Module
