@@ -232,21 +232,6 @@ async function runWithStrategy({
         WHERE table_name = ${table_name}
         ORDER BY ordinal_position`);
 
-      console.info(`Fetching table ${table_name} foreign keys`);
-      const fk = await pool.any(sql<{ column: string }>`
-        SELECT
-          kcu.column_name as column
-        FROM
-          information_schema.table_constraints AS tc
-          JOIN information_schema.key_column_usage AS kcu
-            ON tc.constraint_name = kcu.constraint_name
-            AND tc.table_schema = kcu.table_schema
-          JOIN information_schema.constraint_column_usage AS ccu
-            ON ccu.constraint_name = tc.constraint_name
-            AND ccu.table_schema = tc.table_schema
-        WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name=${table_name}`);
-      const fkColumns = fk.map((row) => row.column);
-
       const template = [];
       // Remove editorconfig checks on auto-generated files.
       template.push(`import { z } from 'zod';\n`);
@@ -280,17 +265,14 @@ async function runWithStrategy({
         const type = typesMap[column.udt_name];
         line += type;
 
-        if (!fkColumns.includes(name)) {
-          const isNullable = column.is_nullable === "YES";
-          line += isNullable ? ".nullable().optional()" : "";
+        const isNullable = column.is_nullable === "YES";
+        line += isNullable ? ".nullable().optional()" : "";
 
-          const isOptional =
-            !isNullable &&
-            filetype === "write" &&
-            (column.is_generated === "ALWAYS" ||
-              column.column_default !== null);
-          line += isOptional ? ".optional()" : "";
-        }
+        const isOptional =
+          !isNullable &&
+          filetype === "write" &&
+          (column.is_generated === "ALWAYS" || column.column_default !== null);
+        line += isOptional ? ".optional()" : "";
 
         template.push(`  ${line},`);
       }
