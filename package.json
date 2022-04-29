@@ -1,6 +1,6 @@
 {
   "name": "pgzod",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Convert a database schema into a Zod schema",
   "author": "Guzmán Monné <admin@gux.codes>",
   "repository": "https://github.com/guzmonne/pgzod",
