@@ -34,6 +34,11 @@ export type Options = {
    */
   clean: boolean;
   /**
+   * Custom PosgreSQL types to Zod validators separated by an equal (=) sign.
+   * E.g. --customZodTypes timestamptx=z.date() date=z.date()
+   */
+  customZodTypes: string[];
+  /**
    * Validators ouput folder
    */
   output: string;
@@ -60,6 +65,12 @@ export const builder: (args: Argv<Record<string, unknown>>) => Argv<Options> = (
         type: "boolean",
         describe: "delete the current zod schema folder",
         default: true,
+      },
+      customZodTypes: {
+        type: "array",
+        describe:
+          "Custom PosgreSQL types to Zod validators separated by an equal (=) sign. E.g. --customZodTypes timestamptx=z.date() date=z.date()",
+        default: [],
       },
       output: {
         type: "string",
@@ -114,6 +125,7 @@ export const handler = async (
 ): Promise<void> => {
   const {
     clean = true,
+    customZodTypes = [],
     output = join(__dirname, "."),
     schema = "public",
     strategy = "write",
@@ -133,7 +145,7 @@ export const handler = async (
       pguser,
     });
 
-    console.info(`Fertching table list for schema: ${schema}`);
+    console.info(`Fetching table list for schema: ${schema}`);
     // Get the list of tables inside the schema.
     const tables = await pool.any(sql<InformationSchema>`
       SELECT table_name FROM information_schema.tables WHERE table_schema = ${schema} ORDER BY table_name`);
@@ -146,29 +158,39 @@ export const handler = async (
     console.info(`Fetching enums`);
     // Get all the enum custom types definitions.
     const customEnums = await pool.any(sql<CustomEnumTypes>`
-        SELECT t.typname as name, concat('"', string_agg(e.enumlabel, '", "'), '"') AS value
+        SELECT t.typname as name, concat('"', string_agg(e.enumlabel, '","'), '"') AS value
         FROM pg_type t
         JOIN pg_enum e on t.oid = e.enumtypid
         JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace
-        WHERE n.nspname = 'franklin'
+        WHERE n.nspname = ${schema}
         GROUP BY name;`);
+    const customEnumsTypesMap = customEnums.reduce(
+      (acc, { name, value }) => ({
+        ...acc,
+        [name]: `z.enum([${value.split(",").sort().join(", ")}])`,
+        // Add support for array of custom enum types. From PostgreSQL logs:
+        //
+        // > When you define a new base type, PostgreSQL automatically provides support for arrays
+        // > of that type. The array type typically has the same name as the base type with the
+        // > underscore character (_) prepended.
+        [`_${name}`]: `z.array(z.enum([${value
+          .split(",")
+          .sort()
+          .join(", ")}]))`,
+      }),
+      {}
+    );
+
+    const customZodTypesMap = customZodTypes.reduce((acc, pair) => {
+      const [postgresType, zodValidator] = pair.split("=");
+      return { ...acc, [postgresType]: zodValidator };
+    }, {});
 
     // Create the types map
-    const typesMap = createTypesMap(
-      customEnums.reduce(
-        (acc, { name, value }) => ({
-          ...acc,
-          [name]: `z.enum([${value}])`,
-          // Add support for array of custom enum types. From PostgreSQL logs:
-          //
-          // > When you define a new base type, PostgreSQL automatically provides support for arrays
-          // > of that type. The array type typically has the same name as the base type with the
-          // > underscore character (_) prepended.
-          [`_${name}`]: `z.array(z.enum([${value}]))`,
-        }),
-        {}
-      )
-    );
+    const typesMap = createTypesMap({
+      ...customEnumsTypesMap,
+      ...customZodTypesMap,
+    });
 
     // Create/Re-create the schema output folder
     if (clean) {
@@ -297,7 +319,7 @@ async function runWithStrategy({
  * Returns a PostgreSQL to Zod types map.
  * @param type - PostgreSQL data type.
  */
-function createTypesMap(customEnumsEntries: Record<string, string>) {
+function createTypesMap(customZodTypes: Record<string, string>) {
   /**
    * Map that translate PostgreSQL data types to Zod functions.
    */
@@ -317,7 +339,7 @@ function createTypesMap(customEnumsEntries: Record<string, string>) {
     uuid: "z.string().uuid()",
     varchar: `z.string()`,
   };
-  const map = { ...ZOD_TYPES_OVERRIDE, ...customEnumsEntries };
+  const map = { ...ZOD_TYPES_OVERRIDE, ...customZodTypes };
   const proxy = new Proxy(map, {
     get: (object, prop: string) =>
       prop in object ? object[prop] : `z.${prop}()`,
