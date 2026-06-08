@@ -331,6 +331,7 @@ function createTypesMap(customZodTypes: Record<string, string>) {
     date: `z.string()`,
     float8: `z.number()`,
     int4: `z.number().int()`,
+    int8: `z.bigint()`,
     jsonb: `jsonSchema`,
     numeric: `z.number()`,
     text: `z.string()`,
