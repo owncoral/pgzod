@@ -204,6 +204,7 @@ export const handler = async (
     runWithStrategy({
       output,
       pool,
+      schema,
       strategy: Strategy.parse(strategy),
       tables,
       typesMap,
@@ -231,6 +232,7 @@ export const handler = async (
 async function runWithStrategy({
   output,
   pool,
+  schema,
   tables,
   typesMap,
   strategy = "write",
@@ -251,7 +253,7 @@ async function runWithStrategy({
       const columns = await pool.any(sql<ColumnsInformation>`
         SELECT is_generated, column_name, ordinal_position, column_default, is_nullable, data_type, udt_name
         FROM information_schema.columns
-        WHERE table_name = ${table_name}
+        WHERE table_schema = ${schema} AND table_name = ${table_name}
         ORDER BY ordinal_position`);
 
       const template = [];
@@ -387,6 +389,7 @@ type ColumnsInformation = {
 type StrategyOptions = {
   output: string;
   pool: DatabasePool;
+  schema: string;
   strategy?: StrategyT;
   tables: readonly InformationSchema[];
   typesMap: { [key: string]: string };
